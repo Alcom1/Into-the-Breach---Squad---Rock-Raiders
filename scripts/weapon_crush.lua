@@ -7,6 +7,7 @@ Weap_RR_Prime_Crush = Skill:new{
     Range = 2,
     Damage = 1,
     PowerCost = 1,
+	TwoClick = true,
     DamageAnimation = "rock1d",
     DamageSound = "/mech/distance/artillery/death",
     TipImage = {
@@ -35,36 +36,58 @@ function Weap_RR_Prime_Crush:GetTargetArea(p1)
     return ret
 end
 
+--Target Area for pass-through
+function Weap_RR_Prime_Crush:GetSecondTargetArea(p1, p2)
+    return Laser_Base:GetTargetArea(p2)
+end
+
 --Skill Effect for charge, damage, pull, and upgrades
 function Weap_RR_Prime_Crush:GetSkillEffect(p1, p2)
     local ret = SkillEffect()
-    local damagePoints = p1:Bresenham(p2, 1, 1)                                 --Points from here to there
-    local pullDirection = GetDirection(p1 - p2)                                 --Direction to pull in
-    
-    --ret:AddAnimation(p1, self.DamageAnimation)                                  --Initial Animation
-    ret:AddSound(self.DamageSound)                                              --Initial Drill Sound
-    ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)                  --Charge!
-    
-    local ramp = 0
 
-    for i, point in ipairs(damagePoints) do
-        if self.FriendlyDamage or not Board:IsPawnTeam(point, TEAM_PLAYER) then --If ally immune, skip damage for allies
-            local damage = SpaceDamage(point, self.Damage + ramp)               --Damage
-            damage.iPush = pullDirection                                        --Damage pull
-            damage.sAnimation = self.DamageAnimation
-            damage.sSound = self.DamageSound
-            ret:AddDamage(damage)                                               --Damage
-            ret:AddBounce(point, 4)                                             --Bounce
-        else
-            ret:AddDamage(SpaceDamage(point, DAMAGE_ZERO))                      --0 damage for immune allies
-        end
+    ret:AddSound(self.DamageSound)                                  --Initial Drill Sound
+    ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)      --Charge!
 
-        if self.ImpactRamp and Board:IsPawnSpace(point) then                    --If ramp, ramp
-            ramp = ramp + 1                                                     --ramp
-        end
-        
-        ret:AddDelay(0.1)                                                       --Delay effects as we travel
+    if p1:Manhattan(p2) >= 2 then
+        local pullDirection = GetDirection(p1 - p2)                 --Direction to pull in
+        local damage = SpaceDamage(
+            p1 + DIR_VECTORS[GetDirection(p2 - p1)], 
+            self.Damage)                                            --Damage
+        damage.iPush = pullDirection                                --Damage pull
+        damage.sAnimation = self.DamageAnimation
+        damage.sSound = self.DamageSound
+        ret:AddDamage(damage)                                       --Damage
     end
+
+    return ret
+end
+
+--Skill Effect for charge, damage, pull, and upgrades
+function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
+    local ret = SkillEffect()
+    local distance = p1:Manhattan(p2)
+
+    ret:AddSound(self.DamageSound)                                  --Initial Drill Sound
+    ret:AddCharge(Board:GetPath(p1, p2, PATH_FLYER), NO_DELAY)      --Charge!
+
+    if distance >= 2 then
+        local pullDirection = GetDirection(p1 - p2)                 --Direction to pull in
+        local damage = SpaceDamage(
+            p1 + DIR_VECTORS[GetDirection(p2 - p1)], 
+            self.Damage)                                            --Damage
+        damage.iPush = pullDirection                                --Damage pull
+        damage.sAnimation = self.DamageAnimation
+        damage.sSound = self.DamageSound
+        ret:AddDamage(damage)                                       --Damage
+    end
+
+    ret:AddDelay(0.1 * (distance + 1))
+    ret:AddSound("/weapons/burst_beam")
+
+    Laser_Base:AddLaser(
+        ret,
+        p2 + DIR_VECTORS[GetDirection(p3 - p2)],
+        GetDirection(p3 - p2))
 
     return ret
 end

@@ -23,7 +23,7 @@ Pawn_RR_Mech_Loader = Pawn:new {
     SoundLocation = "/mech/brute/tank/",
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
-    Massive = true,
+    Massive = true
 }
 
 Pawn_RR_Mech_Transport = Pawn:new {
@@ -41,6 +41,20 @@ Pawn_RR_Mech_Transport = Pawn:new {
     Massive = true
 }
 
+Pawn_RR_Mech_Crusher = Pawn:new {
+    Name = "Crusher Mech",
+    Class = "Brute",
+    Health = 3,
+    MoveSpeed = 2,
+    Image = "Crusher Mech",
+    ImageOffset = FURL_COLORS.colorsRockRaider,
+    SkillList = { "Weap_RR_Prime_Crush" },
+    SoundLocation = "/mech/brute/tank/",
+    DefaultTeam = TEAM_PLAYER,
+    ImpactMaterial = IMPACT_METAL,
+    Massive = true
+}
+
 Pawn_RR_Spawn_Fence = Pawn:new{
     Name = "Electric Fence",
     Health = 1,
@@ -51,7 +65,7 @@ Pawn_RR_Spawn_Fence = Pawn:new{
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
 	Pushable = false,
-    Corpse = false,
+    Corpse = false
 }
 
 Pawn_RR_Spawn_Fence2 = Pawn_RR_Spawn_Fence:new{
@@ -67,7 +81,7 @@ Pawn_RR_Spawn_Dynamite = Pawn:new{
 	SoundLocation = "/support/earthmover",
     DefaultTeam = TEAM_PLAYER,
     ImpactMaterial = IMPACT_METAL,
-    Corpse = false,
+    Corpse = false
 }
 
 Pawn_RR_Spawn_Dynamite2 = Pawn_RR_Spawn_Dynamite:new{

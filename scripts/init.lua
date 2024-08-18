@@ -80,6 +80,20 @@ function mod:init()
         },
         {
             Type =              "mech",
+            Name =              "Crusher Mech",
+            Filename =          "mech_crusher",
+            Path =              "img/units/player",
+            ResourcePath =      "units/player",
+
+            Default =           { PosX = -25, PosY = -3 },
+            Animated =          { PosX = -25, PosY = -3 },
+            Broken =            { PosX = -25, PosY = -3 },
+            Submerged =         { PosX = -23, PosY =  5 },
+            SubmergedBroken =	{ PosX = -23, PosY =  5 },
+            Icon =              {},
+        },
+        {
+            Type =              "mech",
             Name =              "Electric Fence",
             Filename =          "spawn_fence",		
             Path =              "img/units/player",
@@ -105,6 +119,7 @@ function mod:init()
     })
 
     --Sprite Assets
+    modApi:appendAsset("img/weapons/weapon_crush.png",self.resourcePath.."img/weapons/weapon_crush.png")
     modApi:appendAsset("img/weapons/weapon_drill.png",self.resourcePath.."img/weapons/weapon_drill.png")
     modApi:appendAsset("img/weapons/weapon_scoop.png",self.resourcePath.."img/weapons/weapon_scoop.png")
     modApi:appendAsset("img/weapons/weapon_fence.png",self.resourcePath.."img/weapons/weapon_fence.png")
@@ -171,6 +186,7 @@ function mod:init()
     require(self.scriptPath.."pawns")
     require(self.scriptPath.."point")
     require(self.scriptPath.."terrain")
+    require(self.scriptPath.."weapon_crush")
     require(self.scriptPath.."weapon_transporter")
     require(self.scriptPath.."weapon_drill")
     require(self.scriptPath.."weapon_dynamite")
@@ -194,7 +210,7 @@ function mod:load(options, version)
             "Rock Raiders",
             "Pawn_RR_Mech_Drill", 
             "Pawn_RR_Mech_Loader", 
-            "Pawn_RR_Mech_Transport"
+            "Pawn_RR_Mech_Crusher"
         }, 
         "Rock Raiders",
         "Utilizing repurposed mining equipment, these mechs can construct a mighty bulwark against the oncoming vek hoard.",

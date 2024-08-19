@@ -1,3 +1,13 @@
+--Reference laser
+Weap_RR_Prime_Crush_Laser1 = Laser_Base:new{
+    Damage = 1
+}
+
+--Reference laser
+Weap_RR_Prime_Crush_Laser2 = Laser_Base:new{
+    Damage = 2
+}
+
 --Crush weapon with a charge, pass-through, damage, and pull effect
 Weap_RR_Prime_Crush = Skill:new{
     Name = "Chrome Array",
@@ -7,6 +17,11 @@ Weap_RR_Prime_Crush = Skill:new{
     Range = 2,
     Damage = 1,
     PowerCost = 1,
+    Upgrades = 2,
+    UpgradeCost = { 2, 2 },
+    UpgradeList = { "Power Miner!", "+1 Damage" },
+    PowerMiner = false,
+    LaserRef = Weap_RR_Prime_Crush_Laser1,
 	TwoClick = true,
     DamageAnimation = "rock1d",
     DamageSound = "/mech/distance/artillery/death",
@@ -15,6 +30,26 @@ Weap_RR_Prime_Crush = Skill:new{
         Enemy = Point(2, 2),
         Target = Point(2, 1)
     }
+}
+
+--Ally Immune upgrade
+Weap_RR_Prime_Crush_A = Weap_RR_Prime_Crush:new{
+    UpgradeDescription = "Destroying a rock with the laser drops an energy crystal tile that gives Mechs Boost.",
+    PowerMiner = true
+}
+
+--Damage ramp upgrade
+Weap_RR_Prime_Crush_B = Weap_RR_Prime_Crush:new{
+    UpgradeDescription = "Increases drill and laser damage by 1.",
+    Damage = 2,
+    LaserRef = Weap_RR_Prime_Crush_Laser2
+}
+
+--Both upgrades combined
+Weap_RR_Prime_Crush_AB = Weap_RR_Prime_Crush:new{
+    PowerMiner = true,
+    Damage = 2,
+    LaserRef = Weap_RR_Prime_Crush_Laser2
 }
 
 --Target Area for pass-through
@@ -38,7 +73,7 @@ end
 
 --Target Area for pass-through
 function Weap_RR_Prime_Crush:GetSecondTargetArea(p1, p2)
-    return Laser_Base:GetTargetArea(p2)
+    return self.LaserRef:GetTargetArea(p2)
 end
 
 --Skill Effect for charge, damage, pull, and upgrades
@@ -82,9 +117,9 @@ function Weap_RR_Prime_Crush:GetFinalEffect(p1, p2, p3)
     end
 
     ret:AddDelay(0.1 * (distance + 1))
-    ret:AddSound("/weapons/burst_beam")
-
-    Laser_Base:AddLaser(
+    ret:AddSound("/weapons/burst_beam")    
+    
+    self.LaserRef:AddLaser(
         ret,
         p2 + DIR_VECTORS[GetDirection(p3 - p2)],
         GetDirection(p3 - p2))
